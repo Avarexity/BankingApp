@@ -1,5 +1,6 @@
 package org.bankingapp.model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,13 +19,13 @@ import java.util.regex.Pattern;
  * This class manages individual members dealing with their banking info and accounts.
  * Useful for enforcement of restrictions and tracking statistics.
  *
- * @author SkyLHN
+ * @author Avarexity - Whard A.
  */
 public class User {
     private final int id;
     private final String name;
     private final String surname;
-    private final String dateOfBirth;
+    private final LocalDate dateOfBirth;
     private String email;
     private String phone;
     private String password;
@@ -74,7 +75,7 @@ public class User {
     }
 
     // Initializer
-    public User(int id, String name, String surname, String dateOfBirth, String email, String phone, String password) {
+    public User(int id, String name, String surname, LocalDate dateOfBirth, String email, String phone, String password) {
         if (!isValidEmail(email)) {
             throw new IllegalArgumentException("Invalid email format");
         }
@@ -99,7 +100,7 @@ public class User {
     public int getId() { return id; }
     public String getName() { return name; }
     public String getSurname() { return surname; }
-    public String getDateOfBirth() { return dateOfBirth; }
+    public LocalDate getDateOfBirth() { return dateOfBirth; }
     public String getEmail() { return email; }
     public String getPhone() { return phone; }
     public String getPassword() { return password; }

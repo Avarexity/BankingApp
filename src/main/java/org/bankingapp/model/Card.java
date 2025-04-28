@@ -1,11 +1,14 @@
 package org.bankingapp.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.regex.Pattern;
 
 /**
  * Abstract base class representing a bank card in the banking system.
  * Provides common functionality for all card types (Credit, Debit, One-Time).
+ *
+ *  @author Avarexity - Whard A.
  */
 public abstract class Card {
     private final String number;
@@ -13,8 +16,8 @@ public abstract class Card {
     private final String cvv;
     private final Account account;
     private String pin;
-    private double drawLimit;
-    private double currentDraw = 0.0;
+    private BigDecimal drawLimit;
+    private BigDecimal currentDraw = BigDecimal.ZERO;
     private boolean isot = false;
     private OTCard otCard = null;
 
@@ -41,7 +44,7 @@ public abstract class Card {
      * @param pin The PIN code
      * @param drawLimit The maximum draw limit
      */
-    public Card(String number, Date expiryDate, String cvv, Account account, String pin, double drawLimit) {
+    public Card(String number, Date expiryDate, String cvv, Account account, String pin, BigDecimal drawLimit) {
         this.number = number;
         this.expiryDate = expiryDate;
         this.cvv = cvv;
@@ -63,7 +66,7 @@ public abstract class Card {
         this.expiryDate = expiryDate;
         this.cvv = cvv;
         this.account = account;
-        this.drawLimit = 10000.0;
+        this.drawLimit = BigDecimal.valueOf(10_000.0);
     }
 
     // ------------ GETTERS ------------
@@ -72,8 +75,8 @@ public abstract class Card {
     public String getCvv() { return cvv; }
     public Account getAccount() { return account; }
     public String getPin() { return pin; }
-    public double getDrawLimit() { return drawLimit; }
-    public double getCurrentDraw() { return currentDraw; }
+    public BigDecimal getDrawLimit() { return drawLimit; }
+    public BigDecimal getCurrentDraw() { return currentDraw; }
     public boolean isOT() { return isot; }
     // ---------------------------------
 
@@ -96,8 +99,8 @@ public abstract class Card {
      * @param drawLimit The new draw limit
      * @throws IllegalArgumentException if the limit is not positive
      */
-    public void setDrawLimit(double drawLimit) {
-        if (drawLimit > 0) this.drawLimit = drawLimit;
+    public void setDrawLimit(BigDecimal drawLimit) {
+        if (drawLimit.compareTo(BigDecimal.ZERO) > 0) this.drawLimit = drawLimit;
         else throw new IllegalArgumentException("Draw limit must be positive.");
     }
 
@@ -107,10 +110,9 @@ public abstract class Card {
      * @param currentDraw The amount currently drawn
      * @throws IllegalArgumentException if the amount is not positive
      */
-    public void setCurrentDraw(double currentDraw) {
-        if (currentDraw > 0.0) {
-            this.currentDraw = currentDraw;
-        } else throw new IllegalArgumentException("Money drawn must be positive.");
+    public void setCurrentDraw(BigDecimal currentDraw) {
+        if (currentDraw.compareTo(BigDecimal.ZERO) > 0) this.currentDraw = currentDraw;
+        else throw new IllegalArgumentException("Money drawn must be positive.");
     }
 
     /**

@@ -1,10 +1,13 @@
 package org.bankingapp.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
  * Represents a credit card in the banking system.
  * Extends the base Card class with credit-specific functionality.
+ *
+ * @author Avarexity - Whard A.
  */
 public class CreditCard extends Card {
 
@@ -18,7 +21,7 @@ public class CreditCard extends Card {
      * @param pin The PIN code
      * @param drawLimit The maximum draw limit
      */
-    public CreditCard(String number, Date expiryDate, String cvv, Account account, String pin, double drawLimit) {
+    public CreditCard(String number, Date expiryDate, String cvv, Account account, String pin, BigDecimal drawLimit) {
         super(number, expiryDate, cvv, account, pin, drawLimit);
     }
 

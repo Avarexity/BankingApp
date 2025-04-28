@@ -1,10 +1,13 @@
 package org.bankingapp.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
  * Represents a debit card in the banking system.
  * Extends the base Card class with debit-specific functionality.
+ *
+ * @author Avarexity - Whard A.
  */
 public class DebitCard extends Card {
 
@@ -18,7 +21,7 @@ public class DebitCard extends Card {
      * @param pin The PIN code
      * @param drawLimit The maximum draw limit
      */
-    public DebitCard(String number, Date expiryDate, String cvv, Account account, String pin, double drawLimit) {
+    public DebitCard(String number, Date expiryDate, String cvv, Account account, String pin, BigDecimal drawLimit) {
         super(number, expiryDate, cvv, account, pin, drawLimit);
     }
 

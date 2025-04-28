@@ -1,10 +1,13 @@
 package org.bankingapp.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
  * Represents a one-time use card in the banking system.
  * Extends the base Card class with single-use functionality.
+ *
+ * @author Avarexity - Whard A.
  */
 public class OTCard extends Card {
     private boolean used = false;
@@ -19,7 +22,7 @@ public class OTCard extends Card {
      * @param pin The PIN code
      * @param drawLimit The maximum draw limit
      */
-    public OTCard(String number, Date expiryDate, String cvv, Account account, String pin, double drawLimit) {
+    public OTCard(String number, Date expiryDate, String cvv, Account account, String pin, BigDecimal drawLimit) {
         super(number, expiryDate, cvv, account, pin, drawLimit);
         this.setOT(true);
     }

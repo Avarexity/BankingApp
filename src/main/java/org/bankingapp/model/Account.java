@@ -1,17 +1,22 @@
 package org.bankingapp.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents a bank account in the system.
  * Contains account information, balance, and associated cards.
+ *
+ * @author Avarexity - Whard A.
  */
 public class Account {
     private final int id;
     private final String name;
-    private final String currency;
-    private double balance;
+    private final Currency currency;
+    private BigDecimal balance;
     private final User owner;
     private List<Card> cards = new ArrayList<>();
 
@@ -23,11 +28,11 @@ public class Account {
      * @param currency The account currency
      * @param owner The account owner
      */
-    public Account(int id, String name, String currency, User owner) {
+    public Account(int id, String name, Currency currency, User owner) {
         this.id = id;
         this.name = name;
         this.currency = currency;
-        this.balance = 0;
+        this.balance = BigDecimal.ZERO;
         this.owner = owner;
     }
 
@@ -40,19 +45,19 @@ public class Account {
      * @param balance The initial balance
      * @param owner The account owner
      */
-    public Account(int id, String name, String currency, double balance, User owner) {
+    public Account(int id, String name, Currency currency, BigDecimal balance, User owner) {
         this.id = id;
         this.name = name;
         this.currency = currency;
-        this.balance = balance;
+        this.balance = Objects.requireNonNull(balance, "Balance cannot be null.");
         this.owner = owner;
     }
 
     // ------------ GETTERS ------------
     public int getId() { return id; }
     public String getName() { return name; }
-    public String getCurrency() { return currency; }
-    public double getBalance() { return balance; }
+    public Currency getCurrency() { return currency; }
+    public BigDecimal getBalance() { return balance; }
     public User getOwner() { return owner; }
     public List<Card> getCards() { return cards; }
     // ---------------------------------
@@ -63,10 +68,8 @@ public class Account {
      * @param balance The new balance
      * @throws IllegalArgumentException if balance is negative
      */
-    public void setBalance(double balance) {
-        if (balance >= 0) {
-            this.balance = balance;
-        } else throw new IllegalArgumentException("Balance must be positive.");
+    public void setBalance(BigDecimal balance) {
+        this.balance = Objects.requireNonNull(balance, "Balance cannot be null.");
     }
 
     /**
@@ -87,9 +90,10 @@ public class Account {
      * @param amount The amount to deposit
      * @throws IllegalArgumentException if amount is not positive
      */
-    public void deposit(double amount) {
-        if (amount > 0) {
-            this.balance += amount;
+    public void deposit(BigDecimal amount) {
+        Objects.requireNonNull(amount, "Amount cannot be null.");
+        if (amount.compareTo(BigDecimal.ZERO) >= 0) {
+            this.balance = this.balance.add(amount);
         } else throw new IllegalArgumentException("There must be an amount of money to deposit.");
     }
 
@@ -99,9 +103,10 @@ public class Account {
      * @param amount The amount to withdraw
      * @return true if withdrawal succeeded, false if insufficient funds
      */
-    public boolean withdraw(double amount) {
-        if (amount <= this.balance) {
-            this.balance -= amount;
+    public boolean withdraw(BigDecimal amount) {
+        Objects.requireNonNull(amount, "Amount cannot be null.");
+        if (amount.compareTo(this.balance) <= 0) {
+            this.balance = this.balance.subtract(amount);
             return true;
         }
         return false;
@@ -113,9 +118,9 @@ public class Account {
      * @param amount The amount to transfer
      * @return true if transfer succeeded, false if insufficient funds
      */
-    public boolean transferMoney(double amount) {
-        if (amount <= this.balance) {
-            this.balance -= amount;
+    public boolean transferMoney(BigDecimal amount) {
+        if (amount.compareTo(this.balance) <= 0) {
+            this.balance = this.balance.subtract(amount);
             return true;
         }
         return false;
@@ -127,8 +132,8 @@ public class Account {
      * @param amount The amount received
      * @throws IllegalArgumentException if amount is not positive
      */
-    public void receiveMoney(double amount) {
-        if (amount > 0) this.balance += amount;
+    public void receiveMoney(BigDecimal amount) {
+        if (amount.compareTo(BigDecimal.ZERO) > 0) this.balance = this.balance.add(amount);
         else throw new IllegalArgumentException("Amount must be positive.");
     }
 
@@ -167,22 +172,23 @@ public class Account {
      * @param amount The payment amount
      * @return true if payment succeeded, false otherwise
      */
-    public boolean payCard(Card card, double amount) {
+    public boolean payCard(Card card, BigDecimal amount) {
+        Objects.requireNonNull(amount, "Amount cannot be null.");
         if (card != null && cards.contains(card)) {
             if (card.getType().equals("Credit") &&
-                    card.getDrawLimit() <= card.getCurrentDraw() + amount) {
-                balance -= amount;
+                    card.getDrawLimit().compareTo(card.getCurrentDraw().add(amount)) < 1) {
+                balance = balance.subtract(amount);
                 return true;
             } else if (card.getType().equals("Debit") &&
-                    card.getDrawLimit() <= card.getCurrentDraw() + amount &&
-                    balance >= amount) {
-                balance -= amount;
+                    card.getDrawLimit().compareTo(card.getCurrentDraw().add(amount)) < 1 &&
+                    balance.compareTo(amount) > -1) {
+                balance = balance.subtract(amount);
                 return true;
             } else if (card.getType().equals("One-Time Use") &&
-                    card.getDrawLimit() <= card.getCurrentDraw() + amount &&
-                    balance >= amount && card.getOTCard() != null &&
+                    card.getDrawLimit().compareTo(card.getCurrentDraw().add(amount)) < 1 &&
+                    balance.compareTo(amount) > -1 && card.getOTCard() != null &&
                     !card.getOTCard().isUsed()) {
-                balance -= amount;
+                balance = balance.subtract(amount);
                 card.getOTCard().use();
                 return true;
             }
