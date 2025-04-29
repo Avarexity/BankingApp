@@ -134,6 +134,14 @@ public abstract class Card {
     public abstract String getType();
 
     /**
+     * Authorizes the payment made by the card (implemented by subclasses).
+     *
+     * @param amount, the amount of money to be transferred.
+     * @return Whether the transaction was successful.
+     */
+    public abstract boolean authorizePayment(BigDecimal amount);
+
+    /**
      * Gets the associated one-time card if this is a one-time card.
      *
      * @return The OTCard instance or null

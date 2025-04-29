@@ -2,6 +2,7 @@ package org.bankingapp.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Objects;
 
 /**
  * Represents a debit card in the banking system.
@@ -37,8 +38,28 @@ public class DebitCard extends Card {
         super(number, expiryDate, cvv, account);
     }
 
+    /**
+     * Returns the type of the debit card as a String.
+     * @return "Debit", the type of the card as a String.
+     */
     @Override
     public String getType() {
         return "Debit";
+    }
+
+    /**
+     * Attempts to authorize a payment using the card
+     *
+     * @param amount, the amount of money to be sent
+     * @return true - if the transaction was successful, otherwise false
+     */
+    @Override
+    public boolean authorizePayment(BigDecimal amount) {
+        if (amount.compareTo(BigDecimal.ZERO) > 0 &&
+                this.getDrawLimit().compareTo(amount.add(this.getCurrentDraw())) > -1 &&
+                this.getAccount().getBalance().compareTo(amount) >= 0) {
+            this.setCurrentDraw(this.getCurrentDraw().add(amount));
+            return true;
+        } else return false;
     }
 }

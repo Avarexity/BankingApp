@@ -175,24 +175,10 @@ public class Account {
      */
     public boolean payCard(Card card, BigDecimal amount) {
         Objects.requireNonNull(amount, "Amount cannot be null.");
-        if (card != null && cards.contains(card)) {
-            if (card.getType().equals("Credit") &&
-                    card.getDrawLimit().compareTo(card.getCurrentDraw().add(amount)) < 1) {
-                balance = balance.subtract(amount);
-                return true;
-            } else if (card.getType().equals("Debit") &&
-                    card.getDrawLimit().compareTo(card.getCurrentDraw().add(amount)) < 1 &&
-                    balance.compareTo(amount) > -1) {
-                balance = balance.subtract(amount);
-                return true;
-            } else if (card.getType().equals("One-Time Use") &&
-                    card.getDrawLimit().compareTo(card.getCurrentDraw().add(amount)) < 1 &&
-                    balance.compareTo(amount) > -1 && card.getOTCard() != null &&
-                    !card.getOTCard().isUsed()) {
-                balance = balance.subtract(amount);
-                card.getOTCard().use();
-                return true;
-            }
+        Objects.requireNonNull(card, "Card cannot be null.");
+        if (cards.contains(card) && card.authorizePayment(amount)) {
+            this.balance = this.balance.subtract(amount);
+            return true;
         }
         return false;
     }

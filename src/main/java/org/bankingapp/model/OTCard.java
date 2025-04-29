@@ -2,6 +2,7 @@ package org.bankingapp.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Objects;
 
 /**
  * Represents a one-time use card in the banking system.
@@ -51,8 +52,29 @@ public class OTCard extends Card {
      */
     public void use() { this.used = true; }
 
+    /**
+     * Returns the type of the One-Time Use card.
+     * @return "One-Time Use", a String of the card type
+     */
     @Override
     public String getType() {
         return "One-Time Use";
+    }
+
+    /**
+     * Attempts to authorize a payment using the card
+     *
+     * @param amount, the amount of money to be sent
+     * @return true - if the transaction was successful, otherwise false
+     */
+    @Override
+    public boolean authorizePayment(BigDecimal amount) {
+        if (amount.compareTo(BigDecimal.ZERO) > 0 &&
+                this.getDrawLimit().compareTo(amount.add(this.getCurrentDraw())) > -1 &&
+                this.getAccount().getBalance().compareTo(amount) >= 0 &&
+                !used) {
+            this.setCurrentDraw(this.getCurrentDraw().add(amount));
+            return true;
+        } else return false;
     }
 }

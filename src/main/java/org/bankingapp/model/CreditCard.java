@@ -2,6 +2,7 @@ package org.bankingapp.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Objects;
 
 /**
  * Represents a credit card in the banking system.
@@ -37,8 +38,28 @@ public class CreditCard extends Card {
         super(number, expiryDate, cvv, account);
     }
 
+    /**
+     * Gets the type of the credit card.
+     *
+     * @return "Credit", the type of the card as a string
+     */
     @Override
     public String getType() {
         return "Credit";
+    }
+
+    /**
+     * Attempts to authorize a payment using the card
+     *
+     * @param amount, the amount of money to be sent
+     * @return true - if the transaction was successful, otherwise false
+     */
+    @Override
+    public boolean authorizePayment(BigDecimal amount) {
+        if (amount.compareTo(BigDecimal.ZERO) > 0 &&
+                this.getDrawLimit().compareTo(amount.add(this.getCurrentDraw())) > -1) {
+             this.setCurrentDraw(this.getCurrentDraw().add(amount));
+             return true;
+        } else return false;
     }
 }
