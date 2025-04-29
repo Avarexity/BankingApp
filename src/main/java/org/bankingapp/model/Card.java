@@ -1,7 +1,8 @@
 package org.bankingapp.model;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
 
 /**
@@ -12,13 +13,13 @@ import java.util.regex.Pattern;
  */
 public abstract class Card {
     private final String number;
-    private final Date expiryDate;
+    private final LocalDate expiryDate;
     private final String cvv;
     private final Account account;
     private String pin;
     private BigDecimal drawLimit;
     private BigDecimal currentDraw = BigDecimal.ZERO;
-    private boolean isot = false;
+    private boolean ot = false;
     private OTCard otCard = null;
 
     /** Pattern for validating PIN numbers (3-6 digits) */
@@ -44,7 +45,7 @@ public abstract class Card {
      * @param pin The PIN code
      * @param drawLimit The maximum draw limit
      */
-    public Card(String number, Date expiryDate, String cvv, Account account, String pin, BigDecimal drawLimit) {
+    public Card(String number, LocalDate expiryDate, String cvv, Account account, String pin, BigDecimal drawLimit) {
         this.number = number;
         this.expiryDate = expiryDate;
         this.cvv = cvv;
@@ -61,7 +62,7 @@ public abstract class Card {
      * @param cvv The card verification value
      * @param account The associated account
      */
-    public Card(String number, Date expiryDate, String cvv, Account account) {
+    public Card(String number, LocalDate expiryDate, String cvv, Account account) {
         this.number = number;
         this.expiryDate = expiryDate;
         this.cvv = cvv;
@@ -71,13 +72,13 @@ public abstract class Card {
 
     // ------------ GETTERS ------------
     public String getNumber() { return number; }
-    public Date getExpiryDate() { return expiryDate; }
+    public LocalDate getExpiryDate() { return expiryDate; }
     public String getCvv() { return cvv; }
     public Account getAccount() { return account; }
     public String getPin() { return pin; }
     public BigDecimal getDrawLimit() { return drawLimit; }
     public BigDecimal getCurrentDraw() { return currentDraw; }
-    public boolean isOT() { return isot; }
+    public boolean isOT() { return ot; }
     // ---------------------------------
 
     // ------------ SETTERS ------------
@@ -111,25 +112,19 @@ public abstract class Card {
      * @throws IllegalArgumentException if the amount is not positive
      */
     public void setCurrentDraw(BigDecimal currentDraw) {
-        if (currentDraw.compareTo(BigDecimal.ZERO) > 0) this.currentDraw = currentDraw;
+        if (currentDraw.compareTo(BigDecimal.ZERO) > -1) this.currentDraw = currentDraw;
         else throw new IllegalArgumentException("Money drawn must be positive.");
     }
 
     /**
      * Sets whether this is a one-time card.
      *
-     * @param isot true if one-time, false otherwise
+     * @param ot true if one-time, false otherwise
      */
-    public void setOT(boolean isot) {
-        this.isot = isot;
+    public void setOT(boolean ot) {
+        this.ot = ot;
     }
     // ---------------------------------
-
-    @Override
-    public String toString() {
-        return String.format("Card Number: " + number + ", Exp. Date: " + expiryDate + ", CVV: " + cvv +
-                ", Owned By: " + account.getOwner().getName());
-    }
 
     /**
      * Gets the type of the card (implemented by subclasses).
@@ -145,5 +140,27 @@ public abstract class Card {
      */
     public OTCard getOTCard() {
         return otCard;
+    }
+
+    /**
+     * Makes the card a one-time use card.
+     */
+    public void makeOT() {
+        if (otCard == null) {
+            otCard = new OTCard(number, expiryDate, cvv, account, pin, drawLimit);
+            ot = true;
+        };
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Card: %s. (Exp.: %s, CVV: %s) | Owned By: %s | Current Draw: %s%s/%s,",
+                number,
+                expiryDate.format(DateTimeFormatter.ofPattern("MM/yy")),
+                cvv,
+                account.getOwner().getName(),
+                account.getCurrency().getSymbol(),
+                currentDraw.stripTrailingZeros().toPlainString(),
+                drawLimit.stripTrailingZeros().toPlainString());
     }
 }

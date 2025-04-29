@@ -69,6 +69,9 @@ public class Account {
      * @throws IllegalArgumentException if balance is negative
      */
     public void setBalance(BigDecimal balance) {
+        if (balance.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Balance cannot be negative.");
+        }
         this.balance = Objects.requireNonNull(balance, "Balance cannot be null.");
     }
 
@@ -80,7 +83,7 @@ public class Account {
     public void setCards(List<Card> cards) {
         if (cards != null) {
             this.cards = cards;
-        } else throw new IllegalArgumentException("There must be at least one card.");
+        } else throw new IllegalArgumentException("Card list cannot be null.");
     }
     // ---------------------------------
 
@@ -113,17 +116,14 @@ public class Account {
     }
 
     /**
-     * Transfers money from this account (for use in transaction processing).
+     * Transfers money from this account to another (for use in transaction processing).
      *
      * @param amount The amount to transfer
-     * @return true if transfer succeeded, false if insufficient funds
      */
-    public boolean transferMoney(BigDecimal amount) {
-        if (amount.compareTo(this.balance) <= 0) {
-            this.balance = this.balance.subtract(amount);
-            return true;
-        }
-        return false;
+    public void transferMoney(Account to, BigDecimal amount) {
+        if (withdraw(amount)) {
+            to.receiveMoney(amount);
+        } else throw new IllegalArgumentException("Cannot transfer money to another account.");
     }
 
     /**
@@ -133,6 +133,7 @@ public class Account {
      * @throws IllegalArgumentException if amount is not positive
      */
     public void receiveMoney(BigDecimal amount) {
+        Objects.requireNonNull(amount, "Amount cannot be null.");
         if (amount.compareTo(BigDecimal.ZERO) > 0) this.balance = this.balance.add(amount);
         else throw new IllegalArgumentException("Amount must be positive.");
     }
@@ -194,5 +195,15 @@ public class Account {
             }
         }
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Account of: ID: %d, Name: %s | Owned by: %s | Balance: %s%s",
+                id,
+                name,
+                owner.getName(),
+                currency.getDisplayName(),
+                balance.stripTrailingZeros().toPlainString());
     }
 }

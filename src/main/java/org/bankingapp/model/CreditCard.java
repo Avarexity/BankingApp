@@ -1,7 +1,7 @@
 package org.bankingapp.model;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * Represents a credit card in the banking system.
@@ -21,7 +21,7 @@ public class CreditCard extends Card {
      * @param pin The PIN code
      * @param drawLimit The maximum draw limit
      */
-    public CreditCard(String number, Date expiryDate, String cvv, Account account, String pin, BigDecimal drawLimit) {
+    public CreditCard(String number, LocalDate expiryDate, String cvv, Account account, String pin, BigDecimal drawLimit) {
         super(number, expiryDate, cvv, account, pin, drawLimit);
     }
 
@@ -33,7 +33,7 @@ public class CreditCard extends Card {
      * @param cvv The card verification value
      * @param account The associated account
      */
-    public CreditCard(String number, Date expiryDate, String cvv, Account account) {
+    public CreditCard(String number, LocalDate expiryDate, String cvv, Account account) {
         super(number, expiryDate, cvv, account);
     }
 

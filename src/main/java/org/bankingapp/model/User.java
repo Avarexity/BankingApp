@@ -28,7 +28,7 @@ public class User {
     private final LocalDate dateOfBirth;
     private String email;
     private String phone;
-    private String password;
+    private char[] password;
     private final HashMap<String, String> questionsAndAnswers = new HashMap<>();
     private List<Account> accounts = new ArrayList<>();
 
@@ -75,14 +75,14 @@ public class User {
     }
 
     // Initializer
-    public User(int id, String name, String surname, LocalDate dateOfBirth, String email, String phone, String password) {
+    public User(int id, String name, String surname, LocalDate dateOfBirth, String email, String phone, char[] password) {
         if (!isValidEmail(email)) {
             throw new IllegalArgumentException("Invalid email format");
         }
         if (!isValidPhone(phone)) {
             throw new IllegalArgumentException("Invalid phone number format");
         }
-        if (!isValidPassword(password)) {
+        if (!isValidPassword(new String(password))) {
             throw new IllegalArgumentException("Password must be at least 8 characters long and include at least" +
                     " one uppercase letter, one lowercase letter, one number, and one special character.");
         }
@@ -103,7 +103,7 @@ public class User {
     public LocalDate getDateOfBirth() { return dateOfBirth; }
     public String getEmail() { return email; }
     public String getPhone() { return phone; }
-    public String getPassword() { return password; }
+    public String getPassword() { return new String(password); }
     public HashMap<String, String> getQuestionsAndAnswers() { return questionsAndAnswers; }
     public List<Account> getAccounts() { return accounts; }
     // ---------------------------------
@@ -123,8 +123,8 @@ public class User {
         this.phone = phone;
     }
 
-    public void setPassword(String password) {
-        if (!isValidPassword(password)) {
+    public void setPassword(char[] password) {
+        if (!isValidPassword(new String(password))) {
             throw new IllegalArgumentException("Password must be at least 8 characters long and include" +
                     " at least one uppercase letter, one lowercase letter, one number, and one special character.");
         }

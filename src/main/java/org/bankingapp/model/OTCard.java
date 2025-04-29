@@ -1,7 +1,7 @@
 package org.bankingapp.model;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * Represents a one-time use card in the banking system.
@@ -22,7 +22,7 @@ public class OTCard extends Card {
      * @param pin The PIN code
      * @param drawLimit The maximum draw limit
      */
-    public OTCard(String number, Date expiryDate, String cvv, Account account, String pin, BigDecimal drawLimit) {
+    public OTCard(String number, LocalDate expiryDate, String cvv, Account account, String pin, BigDecimal drawLimit) {
         super(number, expiryDate, cvv, account, pin, drawLimit);
         this.setOT(true);
     }
@@ -35,7 +35,7 @@ public class OTCard extends Card {
      * @param cvv The card verification value
      * @param account The associated account
      */
-    public OTCard(String number, Date expiryDate, String cvv, Account account) {
+    public OTCard(String number, LocalDate expiryDate, String cvv, Account account) {
         super(number, expiryDate, cvv, account);
         this.setOT(true);
     }
