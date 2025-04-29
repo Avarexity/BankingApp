@@ -100,7 +100,8 @@ public class Transaction {
                         .append("\nATM/Cash");
                 break;
             case DEPOSIT:
-                sb.append("\nTo: ").append(to.getName())
+                // 'To' is 'from' for deposit-type transactions. It's weird. It works.
+                sb.append("\nTo: ").append(from.getName())
                         .append(" (Deposit)");
                 break;
             case FEE:
