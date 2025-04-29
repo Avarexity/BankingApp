@@ -2,7 +2,6 @@ package org.bankingapp.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Objects;
 
 /**
  * Represents a debit card in the banking system.
