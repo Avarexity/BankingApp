@@ -42,15 +42,6 @@ public class User {
     );
 
     /**
-     * Loosely creates a pattern for a phone number as a string, allowing international
-     * number format and standard mobile format with a length between
-     * 7 and 15 characters in length
-     */
-    private static final Pattern PHONE_PATTERN = Pattern.compile(
-            "^(\\+\\d{1,3}[- ]?)?\\d{7,15}$"
-    );
-
-    /**
      * Creates a pattern for usable passwords that should be used, disallowing
      * weak passwords that do not contain at least one of each type of character
      * and passwords shorter than 8 characters
@@ -69,9 +60,15 @@ public class User {
         return EMAIL_PATTERN.matcher(email).matches();
     }
 
-    // Phone validator
+    /**
+     * Validates if a phone number is correct.
+     *
+     * @param phone, the phone number
+     * @return Whether the number is valid
+     */
     public static boolean isValidPhone(String phone) {
-        return PHONE_PATTERN.matcher(phone).matches();
+        String digits = phone.replaceAll("\\D", "");
+        return digits.length() >= 7 && digits.length() <= 15;
     }
 
     // Initializer
