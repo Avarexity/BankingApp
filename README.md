@@ -1,8 +1,6 @@
 # BankingApp
 A simple, modular Java-based banking application that demonstrates core banking operations such as account management, card issuance (including one-time use cards), and transaction processing. The project is organized into clearly separated layers—model, repository, service, and (optionally) controller—to showcase best practices in object-oriented design and clean architecture.
 
----
-
 ## Table of Contents
 - [Features](#features)
 - [Architecture](#architecture)
@@ -19,8 +17,6 @@ A simple, modular Java-based banking application that demonstrates core banking 
 - [Contributing](#contributing)
 - [License](#license)
 
----
-
 ## Features
 - Create and manage multiple bank **Accounts**
 - Issue different types of **Cards**
@@ -32,8 +28,6 @@ A simple, modular Java-based banking application that demonstrates core banking 
 - Plug-and-play persistence (in-memory repository by default)
 - Easily extensible to add new card types, services, or a web/API layer
 
----
-
 ## Architecture
 The project follows a layered architecture:
 1. **Model**: Plain Java objects (`Account`, `Card`, , etc.) `OTCard`
@@ -42,14 +36,10 @@ The project follows a layered architecture:
 4. **Controller** (optional): Entry points for user interaction or REST API
 5. **Util**: Common utilities and helpers
 
----
-
 ## Tech Stack
 - Java SE 23
 - Build Tool: **Maven** (you can adapt to Gradle if preferred)
 - Testing Framework: JUnit 5
-
----
 
 ## Getting Started
 ### Prerequisites
@@ -62,7 +52,7 @@ The project follows a layered architecture:
    git clone https://github.com/yourusername/BankingApp.git
    cd BankingApp
 ```
-1. Build the project
+2. Build the project
 ``` bash
    mvn clean install
 ```
@@ -79,8 +69,6 @@ mvn package
 java -jar target/bankingapp.jar
 ```
 
----
-
 ## Project Structure
 ``` 
 src/
@@ -96,8 +84,6 @@ src/
         └── org.bankingapp/
             └── ...              # Unit and integration tests
 ```
-
----
 
 ## Usage Examples
 Below are simplified snippets to illustrate how you might use the core classes.
@@ -125,8 +111,6 @@ boolean secondAttempt = otCard.authorizePayment(BigDecimal.valueOf(10));
 System.out.println("Second attempt? " + secondAttempt);  // false
 ```
 
----
-
 ## Testing
 Run all unit tests with:
 ``` bash
@@ -136,8 +120,6 @@ mvn test
 Tests are located under `src/test/java` and use JUnit 5 conventions.
 
 Please adhere to the existing code style and include unit tests for new features.
-
----
 
 ## License
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
