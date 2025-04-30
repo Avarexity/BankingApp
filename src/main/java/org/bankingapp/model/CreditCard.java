@@ -57,7 +57,7 @@ public class CreditCard extends Card {
     @Override
     public boolean authorizePayment(BigDecimal amount) {
         if (amount.compareTo(BigDecimal.ZERO) > 0 &&
-                this.getDrawLimit().compareTo(amount.add(this.getCurrentDraw())) > -1) {
+                this.getDrawLimit().compareTo(amount.add(this.getCurrentDraw())) > -1 && validExp()) {
              this.setCurrentDraw(this.getCurrentDraw().add(amount));
              return true;
         } else return false;

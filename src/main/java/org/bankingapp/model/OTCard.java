@@ -72,7 +72,7 @@ public class OTCard extends Card {
         if (amount.compareTo(BigDecimal.ZERO) > 0 &&
                 this.getDrawLimit().compareTo(amount.add(this.getCurrentDraw())) > -1 &&
                 this.getAccount().getBalance().compareTo(amount) >= 0 &&
-                !used) {
+                !used && validExp()) {
             this.setCurrentDraw(this.getCurrentDraw().add(amount));
             this.use();
             return true;

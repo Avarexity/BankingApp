@@ -157,7 +157,11 @@ public abstract class Card {
         if (otCard == null) {
             otCard = new OTCard(number, expiryDate, cvv, account, pin, drawLimit);
             ot = true;
-        };
+        }
+    }
+
+    public boolean validExp() {
+        return expiryDate.isAfter(LocalDate.now());
     }
 
     @Override

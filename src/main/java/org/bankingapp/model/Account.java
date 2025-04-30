@@ -19,6 +19,7 @@ public class Account {
     private BigDecimal balance;
     private final User owner;
     private List<Card> cards = new ArrayList<>();
+    private TransactionHistory history;
 
     /**
      * Constructs a new Account with zero balance.
@@ -37,7 +38,7 @@ public class Account {
     }
 
     /**
-     * Constructs a new Account with specified balance.
+     * Constructs a new Account with a specified balance.
      *
      * @param id The account ID
      * @param name The account name

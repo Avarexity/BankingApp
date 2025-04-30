@@ -56,7 +56,7 @@ public class DebitCard extends Card {
     public boolean authorizePayment(BigDecimal amount) {
         if (amount.compareTo(BigDecimal.ZERO) > 0 &&
                 this.getDrawLimit().compareTo(amount.add(this.getCurrentDraw())) > -1 &&
-                this.getAccount().getBalance().compareTo(amount) >= 0) {
+                this.getAccount().getBalance().compareTo(amount) >= 0 && validExp()) {
             this.setCurrentDraw(this.getCurrentDraw().add(amount));
             return true;
         } else return false;
