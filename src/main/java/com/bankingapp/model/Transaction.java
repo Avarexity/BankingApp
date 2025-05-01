@@ -1,4 +1,4 @@
-package org.bankingapp.model;
+package com.bankingapp.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

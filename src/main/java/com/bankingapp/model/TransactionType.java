@@ -1,4 +1,4 @@
-package org.bankingapp.model;
+package com.bankingapp.model;
 
 public enum TransactionType {
     TRANSFER, WITHDRAWAL, DEPOSIT, CARD_PAYMENT, FEE

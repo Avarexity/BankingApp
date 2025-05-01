@@ -1,4 +1,4 @@
-package org.bankingapp.model;
+package com.bankingapp.model;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -61,6 +61,7 @@ public class Account {
     public BigDecimal getBalance() { return balance; }
     public User getOwner() { return owner; }
     public List<Card> getCards() { return cards; }
+    public TransactionHistory getHistory() { return history; }
     // ---------------------------------
 
     // ------------ SETTERS ------------
@@ -85,6 +86,11 @@ public class Account {
         if (cards != null) {
             this.cards = cards;
         } else throw new IllegalArgumentException("Card list cannot be null.");
+    }
+
+    public void setHistory(TransactionHistory history) {
+        Objects.requireNonNull(history, "Transaction history cannot be null.");
+        this.history = history;
     }
     // ---------------------------------
 

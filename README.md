@@ -43,7 +43,7 @@ The project follows a layered architecture:
 
 ## Getting Started
 ### Prerequisites
-- Java 23 (JDK 23)
+- Java 24 (JDK 24)
 - Maven 3.6+ (if using Maven)
 
 ### Installation

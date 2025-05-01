@@ -1,8 +1,7 @@
-package org.bankingapp.model;
+package com.bankingapp.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Objects;
 
 /**
  * Represents a credit card in the banking system.

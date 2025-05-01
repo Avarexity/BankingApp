@@ -1,4 +1,4 @@
-package org.bankingapp.model;
+package com.bankingapp.model;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

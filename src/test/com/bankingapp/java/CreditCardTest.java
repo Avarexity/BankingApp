@@ -1,6 +1,6 @@
-import org.bankingapp.model.Account;
-import org.bankingapp.model.CreditCard;
-import org.bankingapp.model.User;
+import com.bankingapp.model.Account;
+import com.bankingapp.model.CreditCard;
+import com.bankingapp.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
