@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -166,7 +167,7 @@ public class User {
 
     @Override
     public String toString() {
-        return String.format("User of: ID: %d, Name: %s %s | Email: %s | Phone: %s",
+        return String.format("User ID: %d, Name: %s %s | Email: %s | Phone: %s",
                 id,
                 name,
                 surname,
@@ -184,6 +185,6 @@ public class User {
 
     @Override
     public int hashCode() {
-        return 31 * id.hashCode() + email.hashCode() + phone.hashCode();
+        return Objects.hash(id, email, phone);
     }
 }
