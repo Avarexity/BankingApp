@@ -1,7 +1,7 @@
 package com.bankingapp.controller;
 
-import com.bankingapp.dto.TransactionRequest;
-import com.bankingapp.dto.TransactionResponse;
+import com.bankingapp.dto.TransferRequest;
+import com.bankingapp.dto.TransferResponse;
 import com.bankingapp.service.TransactionService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +16,8 @@ public class TransactionController {
     }
 
     @PostMapping("/transfer")
-    public TransactionResponse transfer(
-            @Valid @RequestBody TransactionRequest request) {
-        return TransactionResponse.fromEntity(service.transfer(request));
+    public TransferResponse transfer(
+            @Valid @RequestBody TransferRequest request) {
+        return TransferResponse.fromEntity(service.transfer(request));
     }
 }

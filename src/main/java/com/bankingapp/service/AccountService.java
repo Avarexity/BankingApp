@@ -33,7 +33,7 @@ public class AccountService {
         }
     }
 
-    public Account findById(Long id) {
+    public Account getById(Long id) {
         if (repo.existsById(id)) {
             return repo.getReferenceById(id);
         } else {
@@ -41,7 +41,7 @@ public class AccountService {
         }
     }
 
-    public List<Account> findByOwner(User owner) { return repo.findByOwner(owner); }
+    public List<Account> getByOwner(User owner) { return repo.getByOwner(owner); }
 
     private @NotNull Long generateId() { return repo.count() + 1; }
 }

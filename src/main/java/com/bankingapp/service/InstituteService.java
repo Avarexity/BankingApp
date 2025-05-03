@@ -16,10 +16,10 @@ public class InstituteService {
     }
 
     public Institute findByName(String name) {
-        return repo.findByName(name);
+        return repo.getByName(name);
     }
 
-    public Institute findByType(InstituteType type) {
-        return repo.findByType(type);
+    public Institute getByType(InstituteType type) {
+        return repo.getByType(type);
     }
 }

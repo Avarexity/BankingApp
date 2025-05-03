@@ -12,26 +12,26 @@ import java.util.List;
 
 @Repository
 public interface CardRepository extends JpaRepository<Card, Long> {
-    // Find all cards owned by a specific user
-    List<Card> findByOwner(User owner);
+    // get all cards owned by a specific user
+    List<Card> getByOwner(User owner);
 
-    // Find cards by name (exact match)
-    List<Card> findByName(String name);
+    // get cards by name (exact match)
+    List<Card> getByName(String name);
 
-    // Find cards by name (containing pattern)
-    List<Card> findByNameContaining(String namePattern);
+    // get cards by name (containing pattern)
+    List<Card> getByNameContaining(String namePattern);
 
-    // Find cards by type
-    List<Card> findByType(String type);
+    // get cards by type
+    List<Card> getByType(String type);
 
-    // Find cards by expiration date
-    List<Card> findByExpirationDate(LocalDate expirationDate);
+    // get cards by expiration date
+    List<Card> getByExpirationDate(LocalDate expirationDate);
 
-    // Find cards by account
-    List<Card> findByAccount(Account account);
+    // get cards by account
+    List<Card> getByAccount(Account account);
 
-    // Find cards by card number
-    Card findByNumber(@NotNull String number);
+    // get cards by card number
+    Card getByNumber(@NotNull String number);
 
     // Check if a card with a certain number exists
     boolean existsByNumber(@NotNull String number);

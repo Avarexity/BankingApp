@@ -46,7 +46,7 @@ public class TransactionService {
 
     public void clearTransactionHistory() { history = new TransactionHistory(); }
 
-    public Transaction findById(Long id) {
+    public Transaction getById(Long id) {
         if (repo.existsById(id)) {
             return repo.getReferenceById(id);
         } else {
@@ -54,49 +54,49 @@ public class TransactionService {
         }
     }
 
-    public List<Transaction> findByAccount(Account account) {
+    public List<Transaction> getByAccount(Account account) {
         if (repo.existsByAccount(account)) {
-            return repo.findByAccount(account);
+            return repo.getByAccount(account);
         } else {
             return null;
         }
     }
 
-    public List<Transaction> findByInstitute(Institute institute) {
+    public List<Transaction> getByInstitute(Institute institute) {
         if (repo.existsByInstitute(institute)) {
-            return repo.findByInstitute(institute);
+            return repo.getByInstitute(institute);
         } else {
             return null;
         }
     }
 
-    public List<Transaction> findByInstituteType(InstituteType type) {
+    public List<Transaction> getByInstituteType(InstituteType type) {
         if (repo.existsByInstituteType(type)) {
-            return repo.findByInstituteType(type);
+            return repo.getByInstituteType(type);
         } else {
             return null;
         }
     }
 
-    public List<Transaction> findByMaker(User maker) {
+    public List<Transaction> getByMaker(User maker) {
         if (repo.existsByMaker(maker)) {
-            return repo.findByMaker(maker);
+            return repo.getByMaker(maker);
         } else {
             return null;
         }
     }
 
-    public List<Transaction> findByDateBetween(LocalDate startDate, LocalDate endDate) {
+    public List<Transaction> getByDateBetween(LocalDate startDate, LocalDate endDate) {
         if (repo.existsByDateBetween(startDate, endDate)) {
-            return repo.findByDateBetween(startDate, endDate);
+            return repo.getByDateBetween(startDate, endDate);
         } else {
             return null;
         }
     }
 
-    public List<Transaction> findByAmount(BigDecimal min, BigDecimal max) {
+    public List<Transaction> getByAmount(BigDecimal min, BigDecimal max) {
         if (repo.existsByAmountBetween(min, max)) {
-            return repo.findByAmount(min, max);
+            return repo.getByAmount(min, max);
         } else {
             return null;
         }

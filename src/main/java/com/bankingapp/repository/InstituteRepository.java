@@ -7,9 +7,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface InstituteRepository extends JpaRepository<Institute, Long> {
-    // Find by name
-    Institute findByName(String name);
+    // get by name
+    Institute getByName(String name);
 
-    // Find by type
-    Institute findByType(InstituteType type);
+    // get by type
+    Institute getByType(InstituteType type);
 }

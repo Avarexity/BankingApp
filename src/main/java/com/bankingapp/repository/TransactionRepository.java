@@ -10,26 +10,26 @@ import java.util.List;
 
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
-    // Find all transactions by owner
-    List<Transaction> findByMaker(User maker);
+    // get all transactions by owner
+    List<Transaction> getByMaker(User maker);
 
-    // Find all transactions by account
-    List<Transaction> findByAccount(Account account);
+    // get all transactions by account
+    List<Transaction> getByAccount(Account account);
 
-    // Find all transactions by type
-    List<Transaction> findByType(TransactionType type);
+    // get all transactions by type
+    List<Transaction> getByType(TransactionType type);
 
-    // Find all transactions by state
-    List<Transaction> findByState(TransactionState state);
+    // get all transactions by state
+    List<Transaction> getByState(TransactionState state);
 
-    // Find all transactions by date range
-    List<Transaction> findByDateBetween(LocalDate startDate, LocalDate endDate);
+    // get all transactions by date range
+    List<Transaction> getByDateBetween(LocalDate startDate, LocalDate endDate);
 
-    // Find all transactions by range amount
-    List<Transaction> findByAmount(BigDecimal minAmount, BigDecimal maxAmount);
+    // get all transactions by range amount
+    List<Transaction> getByAmount(BigDecimal minAmount, BigDecimal maxAmount);
 
     // Fine all transactions by institute type
-    List<Transaction> findByInstituteType(InstituteType type);
+    List<Transaction> getByInstituteType(InstituteType type);
     
     boolean existsByAccount(Account account);
     
@@ -39,7 +39,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 
     boolean existsByInstitute(Institute institute);
 
-    List<Transaction> findByInstitute(Institute institute);
+    List<Transaction> getByInstitute(Institute institute);
 
     boolean existsByDateBetween(LocalDate startDate, LocalDate endDate);
 

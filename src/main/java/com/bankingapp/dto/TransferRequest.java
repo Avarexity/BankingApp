@@ -4,7 +4,7 @@ import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
 
-public record TransactionRequest(
+public record TransferRequest(
         @NotNull(message = "Sender ID is required.")
         Long senderId,
 

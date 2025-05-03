@@ -26,7 +26,7 @@ public class AccountController {
     @PostMapping
     public ResponseEntity<AccountResponse> createAccount(
             @Valid @RequestBody AccountRequest request) {
-        User user = userService.getUserById(request.userId());
+        User user = userService.getById(request.userId());
         if (user == null) {
             return ResponseEntity.badRequest().build();
         }

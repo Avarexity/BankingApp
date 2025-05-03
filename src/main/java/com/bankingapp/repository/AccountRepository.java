@@ -12,20 +12,20 @@ import java.util.Optional;
 
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long> {
-    // Find all accounts owned by a specific user
-    List<Account> findByOwner(User owner);
+    // get all accounts owned by a specific user
+    List<Account> getByOwner(User owner);
 
-    // Find accounts by name (exact match)
-    List<Account> findByName(String name);
+    // get accounts by name (exact match)
+    List<Account> getByName(String name);
 
-    // Find accounts by name (containing pattern)
-    List<Account> findByNameContaining(String namePattern);
+    // get accounts by name (containing pattern)
+    List<Account> getByNameContaining(String namePattern);
 
-    // Find accounts with a specific currency
-    List<Account> findByCurrency(Currency currency);
+    // get accounts with a specific currency
+    List<Account> getByCurrency(Currency currency);
 
-    // Find accounts with balance between two values
-    List<Account> findByBalanceBetween(BigDecimal minBalance, BigDecimal maxBalance);
+    // get accounts with balance between two values
+    List<Account> getByBalanceBetween(BigDecimal minBalance, BigDecimal maxBalance);
 
     // Count accounts for a specific user
     long countByOwner(User owner);

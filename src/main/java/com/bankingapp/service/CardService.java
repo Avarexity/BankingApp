@@ -31,18 +31,18 @@ public class CardService {
 
     public boolean removeCard(String number) {
         try {
-            repo.delete(repo.findByNumber(number));
+            repo.delete(repo.getByNumber(number));
             return true;
         } catch (Exception e) {
             return false;
         }
     }
 
-    public Card findCard(String number) { return repo.findByNumber(number); }
+    public Card getCard(String number) { return repo.getByNumber(number); }
 
-    public List<Card> findByAccount(Account account) { return repo.findByAccount(account); }
+    public List<Card> getByAccount(Account account) { return repo.getByAccount(account); }
 
-    public List<Card> findByOwner(User user) { return repo.findByOwner(user); }
+    public List<Card> getByOwner(User user) { return repo.getByOwner(user); }
 
     private @NotNull String generateNum() {
         final Random random = new Random();

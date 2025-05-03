@@ -35,7 +35,7 @@ public class UserService {
         }
     }
 
-    public User findById(Long id) {
+    public User getById(Long id) {
         if (repo.existsById(id)) {
             return repo.getReferenceById(id);
         } else {
@@ -43,17 +43,17 @@ public class UserService {
         }
     }
 
-    public User findByEmail(String email) {
+    public User getByEmail(String email) {
         if (repo.existsByEmail(email)) {
-            return repo.findByEmail(email).get();
+            return repo.getByEmail(email).get();
         } else {
             return null;
         }
     }
 
-    public User findByPhone(String phone) {
+    public User getByPhone(String phone) {
         if (repo.existsByPhone(phone)) {
-            return repo.findByPhone(phone).get();
+            return repo.getByPhone(phone).get();
         } else {
             return null;
         }
@@ -75,23 +75,19 @@ public class UserService {
         return repo.existsById(id);
     }
 
-    public List<User> findByNameAndSurname(String name, String surname) {
-        return repo.findByNameAndSurname(name, surname);
+    public List<User> getByNameAndSurname(String name, String surname) {
+        return repo.getByNameAndSurname(name, surname);
     }
 
-    public List<User> findBySurname(String surname) {
-        return repo.findBySurname(surname);
+    public List<User> getBySurname(String surname) {
+        return repo.getBySurname(surname);
     }
 
-    public List<User> findByDateOfBirthAfter(LocalDate date) {
-        return repo.findByDateOfBirthAfter(date);
+    public List<User> getByDateOfBirthAfter(LocalDate date) {
+        return repo.getByDateOfBirthAfter(date);
     }
 
-    public List<User> findByDateOfBirthBetween(LocalDate startDate, LocalDate endDate) {
-        return repo.findByDateOfBirthBetween(startDate, endDate);
-    }
-
-    public List<User> findAll() {
-        return repo.findAll();
+    public List<User> getByDateOfBirthBetween(LocalDate startDate, LocalDate endDate) {
+        return repo.getByDateOfBirthBetween(startDate, endDate);
     }
 }

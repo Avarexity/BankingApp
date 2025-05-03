@@ -1,6 +1,7 @@
 package com.bankingapp.repository;
 
 import com.bankingapp.model.User;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,23 +11,26 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
+    // Get user by ID
+    @NotNull User getById(Long id);
+
     // Existing method
-    Optional<User> findByEmail(String email);
+    Optional<User> getByEmail(String email);
     
-    // Find by phone number
-    Optional<User> findByPhone(String phone);
+    // Get by phone number
+    Optional<User> getByPhone(String phone);
     
-    // Find by name and surname
-    List<User> findByNameAndSurname(String name, String surname);
+    // Get by name and surname
+    List<User> getByNameAndSurname(String name, String surname);
     
-    // Find by surname
-    List<User> findBySurname(String surname);
+    // Get by surname
+    List<User> getBySurname(String surname);
     
-    // Find users born after a certain date
-    List<User> findByDateOfBirthAfter(LocalDate date);
+    // Get users born after a certain date
+    List<User> getByDateOfBirthAfter(LocalDate date);
     
-    // Find users born between two dates
-    List<User> findByDateOfBirthBetween(LocalDate startDate, LocalDate endDate);
+    // Get users born between two dates
+    List<User> getByDateOfBirthBetween(LocalDate startDate, LocalDate endDate);
     
     // Check if a user with this email exists
     boolean existsByEmail(String email);
