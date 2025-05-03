@@ -25,6 +25,9 @@ public abstract class Card {
     /** Pattern for validating PIN numbers (3-6 digits) */
     private static final Pattern PIN_PATTERN = Pattern.compile("^\\d{3,6}$");
 
+    /** Pattern validation for card number (16 digits) */
+    private static final Pattern CARD_PATTERN = Pattern.compile("^\\d{4}-\\d{4}-\\d{4}-\\d{4}$");
+
     /**
      * Validates if a given PIN string meets security requirements.
      *
@@ -34,6 +37,14 @@ public abstract class Card {
     public static boolean isValidPin(String pin) {
         return PIN_PATTERN.matcher(pin).matches();
     }
+
+    /**
+     * Validates if a given card is correct
+     *
+     * @param card
+     * @return
+     */
+    public static boolean isValidCard(String card) { return CARD_PATTERN.matcher(card).matches(); }
 
     /**
      * Constructs a new Card with full parameters.
@@ -174,5 +185,18 @@ public abstract class Card {
                 account.getCurrency().getSymbol(),
                 currentDraw.stripTrailingZeros().toPlainString(),
                 drawLimit.stripTrailingZeros().toPlainString());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Card card = (Card) o;
+        return number.equals(card.number);
+    }
+
+    @Override
+    public int hashCode() {
+        return number.hashCode();
     }
 }

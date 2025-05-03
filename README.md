@@ -10,7 +10,6 @@ A simple, modular Java-based banking application that demonstrates core banking 
     - [Installation](#installation)
     - [Configuration](#configuration)
     - [Running the Application](#running-the-application)
-
 - [Project Structure](#project-structure)
 - [Usage Examples](#usage-examples)
 - [Testing](#testing)
@@ -52,74 +51,90 @@ The project follows a layered architecture:
    git clone https://github.com/yourusername/BankingApp.git
    cd BankingApp
 ```
+
 2. Build the project
-``` bash
-   mvn clean install
-```
+```bash
+  mvn clean install
+``` 
+
 ### Configuration
-No external configuration is required for the in-memory implementation. If you add a database layer later, update the configuration files (e.g., `application.properties` or `persistence.xml`).
+The application uses Spring configuration. Modify `application.properties` or `application.yml` to configure:
+- Database connection settings
+- Logging levels
+- Application-specific properties
+
 ### Running the Application
-If there is a main class (e.g., `org.bankingapp.App`), run:
-``` bash
-mvn exec:java -Dexec.mainClass="org.bankingapp.App"
+Execute the main application class:
 ```
-Or package and run the JAR:
-``` bash
-mvn package
-java -jar target/bankingapp.jar
+bash mvn spring-boot:run
+``` 
+
+Or build and run the JAR:
 ```
+bash mvn package java -jar target/bankingapp.jar
+``` 
 
 ## Project Structure
-``` 
+
+```
 src/
-├── main/
+├── main/ 
 │   ├── java/
-│   │   └── org.bankingapp/
-│   │       ├── model/           # Domain models (Account, Card, OTCard, etc.)
-│   │       ├── repository/      # Repository interfaces & in-memory implementations
-│   │       ├── service/         # Business logic services
-│   │       └── App.java         # (Optional) Main application entry
-└── test/
-    └── java/
-        └── org.bankingapp/
-            └── ...              # Unit and integration tests
+│   │    └── com.bankingapp/
+│   │         ├── model/ # Domain entities
+│   │         ├── repository/ # Spring Data repositories
+│   │         ├── service/ # Business logic services
+│   │         ├── controller/ # REST controllers
+│   │         ├── util/ # Utilities and helpers
+│   │         └── BankingApplication.java # Main application entry
+│   └── resources/
+│            └── application.properties # Configuration
+└── test
+    └── java
+         └── com.bankingapp/
+             └── ... # Unit and integration tests
 ```
 
 ## Usage Examples
-Below are simplified snippets to illustrate how you might use the core classes.
-``` java
-// Create an account with initial balance
-Account account = new Account("123-456", BigDecimal.valueOf(1_000));
 
+### Creating an Account and Card
+```java
+// Create a new account
+Account account = new Account("123-456", BigDecimal.valueOf(1000)); accountRepository.save(account);
 // Issue a one-time use card
-OTCard otCard = new OTCard(
-    "4000-1234-5678-9010",
-    LocalDate.now().plusYears(1),
-    "123",
-    account,
-    "0000",
-    BigDecimal.valueOf(100)
-);
-
-// Authorize a payment of $50
-boolean success = otCard.authorizePayment(BigDecimal.valueOf(50));
-System.out.println("Payment authorized? " + success);  // true
-System.out.println("Card used? " + otCard.isUsed());  // true
-
-// A second attempt fails since it's a one-time card
+OTCard otCard = new OTCard( ; cardRepository.save(otCard);
+// Process a transaction
+boolean success = otCard.authorizePayment(BigDecimal.valueOf(50)); System.out.println("Payment authorized? " + success); // true System.out.println("Card used? " + otCard.isUsed()); // true
+// Second attempt fails since it's a one-time card
 boolean secondAttempt = otCard.authorizePayment(BigDecimal.valueOf(10));
-System.out.println("Second attempt? " + secondAttempt);  // false
+System.out.println("Second attempt? " + secondAttempt); // false
+``` 
+
+### RESTful API Examples
 ```
+# Create a new account
+POST /api/accounts Content-Type: application/json
+{ "accountNumber": "123-456", "balance": 1000 }
+# Issue a card for an account
+POST /api/cards Content-Type: application/json
+{ "cardNumber": "4000-1234-5678-9010", "expiryDate": "2025-06-30", "cvv": "123", "accountId": 1, "pin": "0000", "cardType": "OT", "limit": 100 }
+``` 
 
 ## Testing
-Run all unit tests with:
-``` bash
-mvn test
-```
+Run all tests with:
+```bash
+  mvn test
+``` 
 
-Tests are located under `src/test/java` and use JUnit 5 conventions.
+The project includes unit tests for all layers and integration tests for API endpoints.
 
-Please adhere to the existing code style and include unit tests for new features.
+## Contributing
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## License
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file.
+

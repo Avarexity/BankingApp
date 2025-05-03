@@ -13,7 +13,7 @@ import java.util.Objects;
  * @author Avarexity - Whard A.
  */
 public class Account {
-    private final int id;
+    private final Long id;
     private final String name;
     private final Currency currency;
     private BigDecimal balance;
@@ -29,7 +29,7 @@ public class Account {
      * @param currency The account currency
      * @param owner The account owner
      */
-    public Account(int id, String name, Currency currency, User owner) {
+    public Account(Long id, String name, Currency currency, User owner) {
         this.id = id;
         this.name = name;
         this.currency = currency;
@@ -46,7 +46,7 @@ public class Account {
      * @param balance The initial balance
      * @param owner The account owner
      */
-    public Account(int id, String name, Currency currency, BigDecimal balance, User owner) {
+    public Account(Long id, String name, Currency currency, BigDecimal balance, User owner) {
         this.id = id;
         this.name = name;
         this.currency = currency;
@@ -55,7 +55,7 @@ public class Account {
     }
 
     // ------------ GETTERS ------------
-    public int getId() { return id; }
+    public Long getId() { return id; }
     public String getName() { return name; }
     public Currency getCurrency() { return currency; }
     public BigDecimal getBalance() { return balance; }
@@ -198,5 +198,18 @@ public class Account {
                 owner.getName(),
                 currency.getDisplayName(),
                 balance.stripTrailingZeros().toPlainString());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Account account = (Account) o;
+        return id.equals(account.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

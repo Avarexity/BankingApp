@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
  * @author Avarexity - Whard A.
  */
 public class User {
-    private final int id;
+    private final Long id;
     private final String name;
     private final String surname;
     private final LocalDate dateOfBirth;
@@ -72,7 +72,7 @@ public class User {
     }
 
     // Initializer
-    public User(int id, String name, String surname, LocalDate dateOfBirth, String email, String phone, char[] password) {
+    public User(Long id, String name, String surname, LocalDate dateOfBirth, String email, String phone, char[] password) {
         if (!isValidEmail(email)) {
             throw new IllegalArgumentException("Invalid email format");
         }
@@ -94,7 +94,7 @@ public class User {
     }
 
     // ------------ Getters ------------
-    public int getId() { return id; }
+    public Long getId() { return id; }
     public String getName() { return name; }
     public String getSurname() { return surname; }
     public LocalDate getDateOfBirth() { return dateOfBirth; }
@@ -162,5 +162,28 @@ public class User {
      */
     public boolean removeAccount(Account account) {
         return accounts.remove(account);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("User of: ID: %d, Name: %s %s | Email: %s | Phone: %s",
+                id,
+                name,
+                surname,
+                email,
+                phone);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id.equals(user.id) && email.equals(user.email) && phone.equals(user.phone);
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * id.hashCode() + email.hashCode() + phone.hashCode();
     }
 }

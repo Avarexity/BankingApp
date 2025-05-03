@@ -32,8 +32,8 @@ public class Transaction {
     }
 
     // Constructor for card payments
-    public Transaction(Account from, Institute merchant,
-                       Currency currency, BigDecimal amount, String note) {
+    public Transaction(Account from, Institute merchant, Currency currency,
+                       BigDecimal amount, String note) {
         this.type = TransactionType.CARD_PAYMENT;
         this.from = Objects.requireNonNull(from);
         this.institute = Objects.requireNonNull(merchant);
@@ -119,5 +119,18 @@ public class Transaction {
         }
 
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Transaction that = (Transaction) o;
+        return id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
