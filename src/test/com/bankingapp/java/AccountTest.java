@@ -18,7 +18,7 @@ class AccountTest {
     void setUp() {
         owner = new User(1, "John", "Doe", LocalDate.of(1990, 1, 1), 
                 "john@example.com", "1234567890", "Password123!".toCharArray());
-        account = new Account(1, "Main Account", USD, owner);
+        account = new Account(1, "BankingApp Account", USD, owner);
     }
 
     @Test
