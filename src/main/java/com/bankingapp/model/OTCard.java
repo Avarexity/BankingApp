@@ -1,5 +1,8 @@
 package com.bankingapp.model;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -9,8 +12,16 @@ import java.time.LocalDate;
  *
  * @author Avarexity - Whard A.
  */
+@Entity
+@DiscriminatorValue("OT")
 public class OTCard extends Card {
     private boolean used = false;
+    private BigDecimal maxDraw;
+
+    /**
+     * No-arg constructor for JPA
+     */
+    protected OTCard() {}
 
     /**
      * Constructs a new OTCard with full parameters.
@@ -24,7 +35,6 @@ public class OTCard extends Card {
      */
     public OTCard(String number, LocalDate expiryDate, String cvv, Account account, String pin, BigDecimal drawLimit) {
         super(number, expiryDate, cvv, account, pin, drawLimit);
-        this.setOT(true);
     }
 
     /**
@@ -37,7 +47,15 @@ public class OTCard extends Card {
      */
     public OTCard(String number, LocalDate expiryDate, String cvv, Account account) {
         super(number, expiryDate, cvv, account);
-        this.setOT(true);
+        this.maxDraw = BigDecimal.valueOf(100_000.0);
+        this.used = false;
+    }
+
+    public OTCard(String number, LocalDate expiryDate, String cvv, Account account, BigDecimal maxDraw) {
+        super(number, expiryDate, cvv, account);
+        if (maxDraw.compareTo(BigDecimal.ZERO) > 0) this.maxDraw = maxDraw;
+        else throw new IllegalArgumentException("Maximum draw limit must be positive.");
+        this.used = false;
     }
 
     /**
@@ -68,11 +86,10 @@ public class OTCard extends Card {
      */
     @Override
     public boolean authorizePayment(BigDecimal amount) {
-        if (amount.compareTo(BigDecimal.ZERO) > 0 &&
-                this.getDrawLimit().compareTo(amount.add(this.getCurrentDraw())) > -1 &&
+        if (amount.compareTo(BigDecimal.ZERO) > 0 && this.getAccount() != null &&
                 this.getAccount().getBalance().compareTo(amount) >= 0 &&
                 !used && validExp()) {
-            this.setCurrentDraw(this.getCurrentDraw().add(amount));
+            this.getAccount().setBalance(this.getAccount().getBalance().subtract(amount));
             this.use();
             return true;
         } else return false;

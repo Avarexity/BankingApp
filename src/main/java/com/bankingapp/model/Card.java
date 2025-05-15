@@ -1,8 +1,11 @@
 package com.bankingapp.model;
 
+import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -11,22 +14,40 @@ import java.util.regex.Pattern;
  *
  *  @author Avarexity - Whard A.
  */
+@Entity
+@Table(name = "cards")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "card_type")
 public abstract class Card {
-    private final String number;
-    private final LocalDate expiryDate;
-    private final String cvv;
-    private final Account account;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true, nullable = false, length = 16)
+    private String number;
+
+    @Column(nullable = false, columnDefinition = "DATE")
+    private LocalDate expiryDate;
+
+    @ManyToOne
+    @JoinColumn(name = "account_id")
+    private Account account;
+
+    private String cvv;
     private String pin;
-    private BigDecimal drawLimit;
-    private BigDecimal currentDraw = BigDecimal.ZERO;
     private boolean ot = false;
-    private OTCard otCard = null;
 
     /** Pattern for validating PIN numbers (3-6 digits) */
     private static final Pattern PIN_PATTERN = Pattern.compile("^\\d{3,6}$");
 
     /** Pattern validation for card number (16 digits) */
     private static final Pattern CARD_PATTERN = Pattern.compile("^\\d{4}-\\d{4}-\\d{4}-\\d{4}$");
+
+    /**
+     * No-arg constructor for JPA
+     */
+    protected Card() {}
 
     /**
      * Validates if a given PIN string meets security requirements.
@@ -62,7 +83,6 @@ public abstract class Card {
         this.cvv = cvv;
         this.account = account;
         this.pin = pin;
-        this.drawLimit = drawLimit;
     }
 
     /**
@@ -78,7 +98,6 @@ public abstract class Card {
         this.expiryDate = expiryDate;
         this.cvv = cvv;
         this.account = account;
-        this.drawLimit = BigDecimal.valueOf(10_000.0);
     }
 
     // ------------ GETTERS ------------
@@ -87,8 +106,6 @@ public abstract class Card {
     public String getCvv() { return cvv; }
     public Account getAccount() { return account; }
     public String getPin() { return pin; }
-    public BigDecimal getDrawLimit() { return drawLimit; }
-    public BigDecimal getCurrentDraw() { return currentDraw; }
     public boolean isOT() { return ot; }
     // ---------------------------------
 
@@ -105,35 +122,9 @@ public abstract class Card {
         } else this.pin = pin;
     }
 
-    /**
-     * Sets the draw limit for the card.
-     *
-     * @param drawLimit The new draw limit
-     * @throws IllegalArgumentException if the limit is not positive
-     */
-    public void setDrawLimit(BigDecimal drawLimit) {
-        if (drawLimit.compareTo(BigDecimal.ZERO) > 0) this.drawLimit = drawLimit;
-        else throw new IllegalArgumentException("Draw limit must be positive.");
-    }
-
-    /**
-     * Sets the current drawn amount.
-     *
-     * @param currentDraw The amount currently drawn
-     * @throws IllegalArgumentException if the amount is not positive
-     */
-    public void setCurrentDraw(BigDecimal currentDraw) {
-        if (currentDraw.compareTo(BigDecimal.ZERO) > -1) this.currentDraw = currentDraw;
-        else throw new IllegalArgumentException("Money drawn must be positive.");
-    }
-
-    /**
-     * Sets whether this is a one-time card.
-     *
-     * @param ot true if one-time, false otherwise
-     */
-    public void setOT(boolean ot) {
-        this.ot = ot;
+    public void setAccount(Account account) {
+        Objects.requireNonNull(account);
+        this.account = account;
     }
     // ---------------------------------
 
@@ -152,25 +143,6 @@ public abstract class Card {
      */
     public abstract boolean authorizePayment(BigDecimal amount);
 
-    /**
-     * Gets the associated one-time card if this is a one-time card.
-     *
-     * @return The OTCard instance or null
-     */
-    public OTCard getOTCard() {
-        return otCard;
-    }
-
-    /**
-     * Makes the card a one-time use card.
-     */
-    public void makeOT() {
-        if (otCard == null) {
-            otCard = new OTCard(number, expiryDate, cvv, account, pin, drawLimit);
-            ot = true;
-        }
-    }
-
     public boolean validExp() {
         return expiryDate.isAfter(LocalDate.now());
     }
@@ -182,9 +154,7 @@ public abstract class Card {
                 expiryDate.format(DateTimeFormatter.ofPattern("MM/yy")),
                 cvv,
                 account.getOwner().getName(),
-                account.getCurrency().getSymbol(),
-                currentDraw.stripTrailingZeros().toPlainString(),
-                drawLimit.stripTrailingZeros().toPlainString());
+                account.getCurrency().getSymbol());
     }
 
     @Override

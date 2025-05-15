@@ -1,3 +1,5 @@
+package com.bankingapp;
+
 import com.bankingapp.model.Account;
 import com.bankingapp.model.OTCard;
 import com.bankingapp.model.User;
@@ -15,9 +17,9 @@ class OTCardTest {
 
     @BeforeEach
     void setUp() {
-        User owner = new User(1, "John", "Doe", LocalDate.of(1990, 1, 1),
+        User owner = new User(1L, "John", "Doe", LocalDate.of(1990, 1, 1),
                 "john@example.com", "1234567890", "Password123!".toCharArray());
-        account = new Account(1, "Test Account", Currency.getInstance("USD"), owner);
+        account = new Account(1L, "Test Account", Currency.getInstance("USD"), owner);
         otCard = new OTCard("1234567890123456", LocalDate.now().plusYears(2),
                 "123", account, "1234", new BigDecimal("1000.00"));
     }

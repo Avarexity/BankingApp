@@ -1,5 +1,7 @@
 package com.bankingapp.model;
 
+import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -7,19 +9,50 @@ import java.util.Currency;
 import java.util.Objects;
 import java.util.UUID;
 
+@Entity
+@Table(name = "transactions")
 public class Transaction {
+
+    @Id
+    @GeneratedValue(generator = "UUID")
     private final String id = UUID.randomUUID().toString();
+
+    @Column(nullable = false)
     private final LocalDateTime timestamp = LocalDateTime.now();
+
+    @Column(nullable = false)
+    private BigDecimal amount;
+
+    @Enumerated(EnumType.STRING)
     private final TransactionType type;
+
+    @Enumerated(EnumType.STRING)
+    private TransactionState state;
+
+    @ManyToOne
+    @JoinColumn(name = "card_id", nullable = true)
+    private Card card;
+
     private final Account from;
     private Account to;
     private Institute institute;
     private final Currency currency;
-    private BigDecimal amount;
-    private TransactionState state;
     private String note;
 
-    // Constructor for transfers
+    /**
+     * No-arg constructor for JPA
+     */
+    protected Transaction() {}
+
+    /**
+     * Constructor for transfers
+     *
+     * @param from, the account the transfer was sent from
+     * @param to, the recepient of the trnasfer
+     * @param currency, the currency used
+     * @param amount, the amount to be transferred
+     * @param note, any notes
+     */
     public Transaction(Account from, Account to, Currency currency,
                        BigDecimal amount, String note) {
         this.type = TransactionType.TRANSFER;
@@ -31,7 +64,15 @@ public class Transaction {
         this.state = TransactionState.PENDING;
     }
 
-    // Constructor for card payments
+    /**
+     * Constructor for card payments
+     *
+     * @param from, the maker of the transaction
+     * @param merchant, the institute to which the transaction was made
+     * @param currency, the currency of the transaciton
+     * @param amount, the amount of the transaction
+     * @param note, any notes
+     */
     public Transaction(Account from, Institute merchant, Currency currency,
                        BigDecimal amount, String note) {
         this.type = TransactionType.CARD_PAYMENT;

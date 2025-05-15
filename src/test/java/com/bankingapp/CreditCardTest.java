@@ -1,3 +1,5 @@
+package com.bankingapp;
+
 import com.bankingapp.model.Account;
 import com.bankingapp.model.CreditCard;
 import com.bankingapp.model.User;

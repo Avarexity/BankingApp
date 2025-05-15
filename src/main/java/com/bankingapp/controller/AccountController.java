@@ -35,4 +35,27 @@ public class AccountController {
 
         return ResponseEntity.ok(AccountResponse.fromEntity(account));
     }
+
+    public ResponseEntity<AccountResponse> getAccount(Long accountId, Long userId) {
+        Account account = accountService.getById(accountId);
+        User user = userService.getById(userId);
+
+        if (account == null || !account.getOwner().equals(user)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(AccountResponse.fromEntity(account));
+    }
+
+    public ResponseEntity<AccountResponse> deleteAccount(Long id) {
+        Account account = accountService.getById(id);
+
+        if (account == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if (accountService.removeAccount(account)) {
+            return ResponseEntity.ok().build();
+        } else throw new RuntimeException("Account could not be deleted");
+    }
 }

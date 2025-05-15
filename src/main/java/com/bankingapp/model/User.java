@@ -1,10 +1,9 @@
 package com.bankingapp.model;
 
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -22,16 +21,39 @@ import java.util.regex.Pattern;
  *
  * @author Avarexity - Whard A.
  */
+@Entity
+@Table(name = "users")
 public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private final Long id;
+
+    @Column(nullable = false)
     private final String name;
+
+    @Column(nullable = false)
     private final String surname;
+
+    @Column(nullable = false, columnDefinition = "DATE")
     private final LocalDate dateOfBirth;
+
+    @Column(unique = true, nullable = false)
     private String email;
+
+    @Column(nullable = false)
     private String phone;
-    private char[] password;
-    private final HashMap<String, String> questionsAndAnswers = new HashMap<>();
+
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private List<Account> accounts = new ArrayList<>();
+
+    private char[] password;
+
+    @ElementCollection
+    @CollectionTable(name = "user_security_questions", joinColumns = @JoinColumn(name = "user_id"))
+    @MapKeyColumn(name = "question")
+    @Column(name = "answer")
+    private final Map<String, String> questionsAndAnswers = new HashMap<>();
 
     /**
      * Creates a loosely checked formatting to check if a string has a formatting similar to an email.
@@ -72,7 +94,22 @@ public class User {
         return digits.length() >= 7 && digits.length() <= 15;
     }
 
-    // Initializer
+    /**
+     * No-arg constructor for JPA
+     */
+    protected User() {}
+
+    /**
+     * Constructs a new user.
+     *
+     * @param id, the ID of the user
+     * @param name, the first name of the user
+     * @param surname, the surname of the user
+     * @param dateOfBirth, the DOB of the user
+     * @param email, the email of the user
+     * @param phone, the phone number of the user
+     * @param password, the password of the user
+     */
     public User(Long id, String name, String surname, LocalDate dateOfBirth, String email, String phone, char[] password) {
         if (!isValidEmail(email)) {
             throw new IllegalArgumentException("Invalid email format");
@@ -102,7 +139,7 @@ public class User {
     public String getEmail() { return email; }
     public String getPhone() { return phone; }
     public String getPassword() { return new String(password); }
-    public HashMap<String, String> getQuestionsAndAnswers() { return questionsAndAnswers; }
+    public Map<String, String> getQuestionsAndAnswers() { return questionsAndAnswers; }
     public List<Account> getAccounts() { return accounts; }
     // ---------------------------------
 
@@ -151,7 +188,7 @@ public class User {
      * false - if the account was not created successfully
      */
     public boolean addAccount(Account account) {
-        return accounts.add(account);
+        return accounts.add(account) && account.setOwner(this);
     }
 
     /**
@@ -162,7 +199,7 @@ public class User {
      * false - if they didn't have such account
      */
     public boolean removeAccount(Account account) {
-        return accounts.remove(account);
+        return accounts.remove(account) && account.setOwner(null);
     }
 
     @Override

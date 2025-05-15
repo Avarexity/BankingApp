@@ -1,3 +1,5 @@
+package com.bankingapp;
+
 import com.bankingapp.model.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

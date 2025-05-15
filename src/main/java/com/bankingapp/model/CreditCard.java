@@ -1,5 +1,9 @@
 package com.bankingapp.model;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import org.jetbrains.annotations.NotNull;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -9,7 +13,17 @@ import java.time.LocalDate;
  *
  * @author Avarexity - Whard A.
  */
+@Entity
+@DiscriminatorValue("Credit")
 public class CreditCard extends Card {
+
+    private BigDecimal creditLimit;
+    private BigDecimal creditUsed;
+
+    /**
+     * No-arg constructor for JPA
+     */
+    protected CreditCard() {}
 
     /**
      * Constructs a new CreditCard with full parameters.
@@ -21,8 +35,10 @@ public class CreditCard extends Card {
      * @param pin The PIN code
      * @param drawLimit The maximum draw limit
      */
-    public CreditCard(String number, LocalDate expiryDate, String cvv, Account account, String pin, BigDecimal drawLimit) {
+    public CreditCard(String number, LocalDate expiryDate, String cvv, Account account, String pin, BigDecimal drawLimit, BigDecimal creditLimit, BigDecimal creditUsed) {
         super(number, expiryDate, cvv, account, pin, drawLimit);
+        this.creditLimit = creditLimit;
+        this.creditUsed = creditUsed;
     }
 
     /**
@@ -35,6 +51,8 @@ public class CreditCard extends Card {
      */
     public CreditCard(String number, LocalDate expiryDate, String cvv, Account account) {
         super(number, expiryDate, cvv, account);
+        this.creditLimit = BigDecimal.valueOf(10_000.0);
+        this.creditUsed = BigDecimal.ZERO;
     }
 
     /**
@@ -54,11 +72,14 @@ public class CreditCard extends Card {
      * @return true - if the transaction was successful, otherwise false
      */
     @Override
-    public boolean authorizePayment(BigDecimal amount) {
+    public boolean authorizePayment(@NotNull BigDecimal amount) {
         if (amount.compareTo(BigDecimal.ZERO) > 0 &&
-                this.getDrawLimit().compareTo(amount.add(this.getCurrentDraw())) > -1 && validExp()) {
-             this.setCurrentDraw(this.getCurrentDraw().add(amount));
-             return true;
-        } else return false;
+                this.creditLimit.compareTo(amount.add(this.creditUsed)) > -1 &&
+                this.getAccount() != null && validExp()) {
+            this.getAccount().setBalance(this.getAccount().getBalance().subtract(amount));
+            this.creditUsed = this.creditUsed.add(amount);
+            return true;
+        }
+        return false;
     }
 }

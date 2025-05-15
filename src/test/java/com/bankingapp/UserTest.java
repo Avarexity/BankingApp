@@ -1,3 +1,5 @@
+package com.bankingapp;
+
 import com.bankingapp.model.Account;
 import com.bankingapp.model.User;
 import org.junit.jupiter.api.BeforeEach;

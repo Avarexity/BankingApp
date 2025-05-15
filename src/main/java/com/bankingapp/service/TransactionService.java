@@ -22,6 +22,11 @@ public class TransactionService {
         this.history = new TransactionHistory();
     }
 
+    public Transaction transaction(Transaction tx) {
+        repo.save(tx);
+        return tx;
+    }
+
     public Transaction transfer(Account sender, Account receiver, Currency currency,
                                 BigDecimal amount, String note) {
         Transaction tx = new Transaction(sender, receiver, currency,  amount, note);

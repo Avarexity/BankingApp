@@ -1,5 +1,7 @@
 package com.bankingapp.model;
 
+import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Currency;
@@ -12,14 +14,40 @@ import java.util.Objects;
  *
  * @author Avarexity - Whard A.
  */
+
+@Entity
+@Table(name = "accounts")
 public class Account {
-    private final Long id;
-    private final String name;
-    private final Currency currency;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+
+    @Column(unique = true, nullable = false)
+    private String accountNumber;
+
+    @Enumerated(EnumType.STRING)
+    private Currency currency;
+
+    @Column(nullable = false)
     private BigDecimal balance;
-    private final User owner;
+
+    @ManyToOne
+    @JoinColumn(name = "owner_id", nullable = false)
+    private User owner;
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Card> cards = new ArrayList<>();
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "history_id", referencedColumnName = "id")
     private TransactionHistory history;
+
+    /**
+     * No-arg constructor for JPA
+     */
+    protected Account() {}
 
     /**
      * Constructs a new Account with zero balance.
@@ -46,13 +74,7 @@ public class Account {
      * @param balance The initial balance
      * @param owner The account owner
      */
-    public Account(Long id, String name, Currency currency, BigDecimal balance, User owner) {
-        this.id = id;
-        this.name = name;
-        this.currency = currency;
-        this.balance = Objects.requireNonNull(balance, "Balance cannot be null.");
-        this.owner = owner;
-    }
+    public Account(Long id, String name, Currency currency, BigDecimal balance, User owner) {}
 
     // ------------ GETTERS ------------
     public Long getId() { return id; }
@@ -91,6 +113,11 @@ public class Account {
     public void setHistory(TransactionHistory history) {
         Objects.requireNonNull(history, "Transaction history cannot be null.");
         this.history = history;
+    }
+
+    public void setOwner(User owner) {
+        Objects.requireNonNull(owner, "Owner cannot be null.");
+        this.owner = owner;
     }
     // ---------------------------------
 
@@ -154,6 +181,7 @@ public class Account {
     public boolean addCard(Card card) {
         if (card != null) {
             this.cards.add(card);
+            card.setAccount(this);
             return true;
         }
         return false;
@@ -168,6 +196,7 @@ public class Account {
     public boolean removeCard(Card card) {
         if (card != null && cards.contains(card)) {
             this.cards.remove(card);
+            card.setAccount(null);
             return true;
         }
         return false;

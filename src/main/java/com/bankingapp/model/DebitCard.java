@@ -1,5 +1,9 @@
 package com.bankingapp.model;
 
+import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -9,7 +13,19 @@ import java.time.LocalDate;
  *
  * @author Avarexity - Whard A.
  */
+@Entity
+@DiscriminatorValue("Debit")
 public class DebitCard extends Card {
+
+    private BigDecimal dailyLimit;
+    private BigDecimal dailySpent;
+    private int dailyUsed;
+    private int dailyUses;
+
+    /**
+     * No-arg constructor for JPA
+     */
+    protected DebitCard() {}
 
     /**
      * Constructs a new DebitCard with full parameters.
@@ -21,8 +37,12 @@ public class DebitCard extends Card {
      * @param pin The PIN code
      * @param drawLimit The maximum draw limit
      */
-    public DebitCard(String number, LocalDate expiryDate, String cvv, Account account, String pin, BigDecimal drawLimit) {
+    public DebitCard(String number, LocalDate expiryDate, String cvv, Account account, String pin, BigDecimal drawLimit, BigDecimal dailyLimit, int dailyUses) {
         super(number, expiryDate, cvv, account, pin, drawLimit);
+        if (dailyLimit.compareTo(BigDecimal.ZERO) > 0) this.dailyLimit = dailyLimit;
+        else throw new IllegalArgumentException("Daily limit must be positive.");
+        if (dailyUses < 0 || dailyUses > 30) throw new IllegalArgumentException("Daily uses must be between 0 and 30.");
+        else this.dailyUses = dailyUses;
     }
 
     /**
@@ -35,6 +55,10 @@ public class DebitCard extends Card {
      */
     public DebitCard(String number, LocalDate expiryDate, String cvv, Account account) {
         super(number, expiryDate, cvv, account);
+        this.dailyLimit = BigDecimal.valueOf(100_000.0);
+        this.dailyUses = 15;
+        this.dailySpent = BigDecimal.ZERO;
+        this.dailyUsed = 0;
     }
 
     /**
@@ -55,9 +79,12 @@ public class DebitCard extends Card {
     @Override
     public boolean authorizePayment(BigDecimal amount) {
         if (amount.compareTo(BigDecimal.ZERO) > 0 &&
-                this.getDrawLimit().compareTo(amount.add(this.getCurrentDraw())) > -1 &&
+                this.dailyLimit.compareTo(amount.add(this.dailySpent)) > -1 &&
+                this.dailyUsed < this.dailyUses && this.getAccount() != null &&
                 this.getAccount().getBalance().compareTo(amount) >= 0 && validExp()) {
-            this.setCurrentDraw(this.getCurrentDraw().add(amount));
+            this.getAccount().setBalance(this.getAccount().getBalance().subtract(amount));
+            dailySpent = dailySpent.add(amount);
+            dailyUsed++;
             return true;
         } else return false;
     }

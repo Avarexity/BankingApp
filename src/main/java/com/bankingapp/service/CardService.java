@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class CardService {
     private final CardRepository repo;
+    private static final Random random = new Random();
 
     @Autowired
     public CardService(CardRepository repo) { this.repo = repo; }
@@ -44,18 +45,13 @@ public class CardService {
 
     public List<Card> getByOwner(User user) { return repo.getByOwner(user); }
 
-    private @NotNull String generateNum() {
-        final Random random = new Random();
+    private static @NotNull String generateNum() {
 
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 16; i++) {
-            sb.append(random.nextInt(10));  // random digit 0-9
-            if ((i + 1) % 4 == 0 && i != 15) {
-                sb.append('-');  // add dash every 4 digits, except at the end
-            }
-        }
-
-        return sb.toString();
+        return String.format("%04d-%04d-%04d-%04d",
+                random.nextInt(10_000),
+                random.nextInt(10_000),
+                random.nextInt(10_000),
+                random.nextInt(10_000));
     }
 
     private @NotNull LocalDate generateExpDate() {

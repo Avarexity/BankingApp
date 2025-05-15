@@ -11,7 +11,7 @@ public class TransactionHistory {
     private final Account account;
     private final List<Transaction> transactions = new ArrayList<>();
 
-    public TransactionHistory() {
+    public TransactionHistory(Account account) {
         this.account = account;
     }
 
